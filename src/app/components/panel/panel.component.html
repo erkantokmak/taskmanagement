@@ -1,0 +1,249 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs nav-justified bg-dark header">
+                <li class="nav-item">
+                    <a class="nav-link"
+                        (click)="gorevtab=true; kullanicitab=false; pozisyontab=false; notlartab=false; performanstab=false;">Görevler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        (click)="kullanicitab=true; gorevtab=false; pozisyontab=false; notlartab=false; performanstab=false;">Kullanıcılar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        (click)="pozisyontab=true; gorevtab=false; kullanicitab=false; notlartab=false; performanstab=false;">Pozisyonlar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link "
+                        (click)="notlartab=true; gorevtab=false; pozisyontab=false; kullanicitab=false; performanstab=false;">Notlar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link "
+                        (click)="performanstab=true; gorevtab=false; pozisyontab=false; notlartab=false; kullanicitab=false;">Performans
+                        Raporları</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="gorevtab">
+        <div class="card col-md-12">
+            <div class="card-header">
+                <h4 class="text-center">Görev Ekle / Düzenle</h4>
+            </div>
+            <form #frm="ngForm" (submit)="Kaydet()">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Başlık </label>
+                        <input type="text" name="baslik" class="form-control" [(ngModel)]="secGorev.baslik">
+                    </div>
+                    <div class="form-group">
+                        <label>Pozisyon </label>
+                        <input type="text" name="pozisyon" class="form-control" [(ngModel)]="secGorev.pozisyonId">
+                    </div>
+                    <div class="form-group">
+                        <label>Görev </label>
+                        <input type="text" name="gorev" class="form-control" [(ngModel)]="secGorev.gorev">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label> </label>
+                        <input type="submit" name="Kaydet" value="Kaydet" class="btn btn-success btn-sm form-control">
+                        <button class="btn btn-warning btn-sm form-control mt-2"
+                            (click)="GorevDuzenle();">Düzenle</button>
+                        <button class="btn btn-danger btn-sm form-control mt-2" (click)="GorevSil()">Sil</button>
+                    </div>
+                    <div [ngClass]="sonuc.islem ? 'alert alert-success' : 'alert alert-danger'"
+                        *ngIf="sonuc.mesaj?.length>0">{{sonuc.mesaj}}</div>
+                </div>
+            </form>
+        </div>
+
+        <table class="table table-hover col-md-12">
+            <thead class="">
+                <th>Pozisyon</th>
+                <th>Başlık</th>
+                <th>Düzenlenme Tarihi</th>
+                <th>Durum</th>
+                <th>Seç</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let gorev of gorevler">
+                    <td class="font-weight-bold">{{gorev.pozisyonId}}</td>
+                    <td class="font-weight-bold">{{gorev.baslik}}</td>
+                    <td class="font-weight-bold">{{gorev.duzTarih | date:"dd.MM.yyyy HH:mm:ss"}}</td>
+                    <td><span class="badge badge-pill bg-success text-white" *ngIf="gorev.islem">Tamamlandı</span>
+                        <span class="badge badge-pill bg-warning text-white" *ngIf="!gorev.islem">Bekliyor</span>
+                    </td>
+                    <td><button class="btn btn-light" (click)="GorevSec(gorev);">Seç</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="row" *ngIf="kullanicitab">
+        <div class="card col-md-6">
+            <div class="card-header">
+                <h4>Kullanıcılar</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <th>Ad Soyad</th>
+                        <th>Mail</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let kullanici of kullanicilar">
+                            <td>{{kullanici.adsoyad}}</td>
+                            <td>{{kullanici.mail}}</td>
+                            <td><button class="btn btn-light" (click)="KullaniciSec(kullanici);">Seç</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+        
+
+    <div class="card col-md-6" >
+        <div class="card-header">
+            <h4 class="text-center">Kullanıcı Düzenle / Sil</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>Ad Soyad </label>
+                <input type="text" name="baslik" class="form-control" [(ngModel)]="secKullanici.adsoyad">
+            </div>
+            <div class="form-group">
+                <label>E- Mail</label>
+                <input type="text" name="pozisyon" class="form-control" [(ngModel)]="secKullanici.mail">
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="form-group">
+                <label> </label>
+                <input type="submit" name="Not Kaydet " value="Kaydet" class="btn btn-success btn-sm form-control">
+                <button  class="btn btn-warning btn-sm form-control mt-2" (click)="KullaniciDuzenle();">Düzenle</button>
+                <button  class="btn btn-danger btn-sm form-control mt-2" (click)="KullaniciSil()">Sil</button>
+            </div>
+            <div [ngClass]="sonuc.islem ? 'alert alert-success' : 'alert alert-danger'" *ngIf="sonuc.mesaj?.length>0">{{sonuc.mesaj}}</div>
+
+        </div>
+    </div>
+</div>
+
+    <div class="row" *ngIf="pozisyontab">
+        <div class="card col-md-6">
+            <div class="card-header">
+                <h4>Pozisyonlar</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <th>Pozisyon</th>
+                        <th>Seç</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let pozisyon of pozisyonlar">
+                            <td>{{pozisyon.pozisyonad}}</td>
+                            <td><button class="btn btn-light" (click)="PozisyonSec(pozisyon);">Seç</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+
+        <div class="card col-md-6" *ngIf="pozisyontab">
+            <form #frm="ngForm" (ngSubmit)="PozisyonKaydet()">
+                <div class="card-header">
+                    <h4>Pozisyon Ekle / Duzenle</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Pozisyon Adı</label>
+                        <input type="text" name="pozisyon" class="form-control" [(ngModel)]="secPozisyon.pozisyonad">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label> </label>
+                        <input type="submit" name="PozisyonKaydet " value="Kaydet"
+                            class="btn btn-success btn-sm form-control">
+                        <button class="btn btn-warning btn-sm form-control mt-2"
+                            (click)="PozisyonDuzenle();">Düzenle</button>
+                        <button class="btn btn-danger btn-sm form-control mt-2" (click)="PozisyonSil()">Sil</button>
+                    </div>
+                    <div [ngClass]="sonuc.islem ? 'alert alert-success' : 'alert alert-danger'"
+                        *ngIf="sonuc.mesaj?.length>0">{{sonuc.mesaj}}</div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="notlartab">
+        <div class="card col-md-6" >
+            <div class="card-header">
+                <h4>Notlar</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <th>Başlık</th>
+                        <th>Konu</th>
+                        <th>Kayıt Tarihi</th>
+                        <th>Kullanıcı Adı</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let not of notlar">
+                            <td>{{not.baslik}}</td>
+                            <td>{{not.konu}}</td>
+                            <td>{{not.kayTatih | date:"dd.MM.yyyy HH:mm:ss"}}</td>
+                            <td>{{not.kullaniciad}}</td>
+                            <td><button class="btn btn-light" (click)="NotSec(not);">Seç</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer"></div>
+    
+        </div>
+        <div class="card col-md-6" *ngIf="notlartab">
+            <form #frm="ngForm" (ngSubmit)="NotKaydet()">
+            <div class="card-header"><h4>Not Ekle / Duzenle</h4></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Başlık</label>
+                    <input type="text" name="baslik" class="form-control" [(ngModel)]="secNot.baslik">
+                </div>
+                <div class="form-group">
+                    <label>Konu</label>
+                    <input type="text" name="konu" class="form-control" [(ngModel)]="secNot.konu">
+                </div>
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" name="kullaniciad" class="form-control" [(ngModel)]="secNot.kullaniciad">
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group">
+                    <label> </label>
+                    <input type="submit" name="Not Kaydet " value="Kaydet" class="btn btn-success btn-sm form-control">
+                    <button  class="btn btn-warning btn-sm form-control mt-2" (click)="NotDuzenle();">Düzenle</button>
+                    <button  class="btn btn-danger btn-sm form-control mt-2" (click)="NotSil()">Sil</button>
+                </div>
+                <div [ngClass]="sonuc.islem ? 'alert alert-success' : 'alert alert-danger'" *ngIf="sonuc.mesaj?.length>0">{{sonuc.mesaj}}</div>
+    
+            </div>
+        </form>
+        </div>
+    </div>
+
+</div>
+
+<app-footer></app-footer>
